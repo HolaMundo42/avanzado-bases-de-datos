@@ -19,8 +19,13 @@ const getAlbumes = (_, res) => {
             ...
         ]
     */
-
-    
+   const myInstruction = "SELECT * FROM albumes"; 
+   conn.query(myInstruction, (err, rows) => {
+    if (err) {
+        console.error("Error consultando: " + err);
+    }
+    res.send(rows);
+});  
 };
 
 const getAlbum = (req, res) => {
@@ -34,6 +39,17 @@ const getAlbum = (req, res) => {
             "nombre_artista": "Nombre del artista"
         }
     */
+
+    let id = req.params;
+    const myInstruction = "SELECT * FROM albumes WHERE albumes.id = ?";
+    conn.query(myInstruction, [id], (err, rows) => {
+            if (err) {
+                console.error("Error consultando: " + err);
+                return;
+            }
+        
+            res.json(rows[0]);
+    });
 };
 
 const createAlbum = (req, res) => {
@@ -46,6 +62,17 @@ const createAlbum = (req, res) => {
             "artista": "Id del artista"
         }
     */
+
+    let {nombre, artista} = req.body;
+    const myInstruction = "INSERT INTO albumes (nombre, artista) values (?, ?)";
+    conn.query(myInstruction, [nombre, artista], err => {
+        if (err) {
+            console.error("Error consultando: " + err);
+            return;
+        }
+
+        res.send("Se creó el album!");
+    });
 };
 
 const updateAlbum = (req, res) => {
@@ -58,11 +85,34 @@ const updateAlbum = (req, res) => {
             "artista": "Id del artista"
         }
     */
+    let {id} = req.params;
+    let {nombre, artista} = req.body;
+    const myInstruction = "UPDATE albumes SET nombre = ?, artista = ? where id = ?";
+
+    conn.query(myInstruction, [nombre, artista, id], err => {
+        if (err) {
+            console.error("Error consultando: " + err);
+            return;
+        }
+
+        res.send("Se actualizó el album!");
+    });
 };
 
 const deleteAlbum = (req, res) => {
     // Completar con la consulta que elimina un album
     // Recordar que los parámetros de una consulta DELETE se encuentran en req.params
+
+    let id = req.params;
+    const myInstruction = 'DELETE FROM albumes WHERE id = ?';
+    conn.query(myInstruction, [id], err => { 
+        if (err) {
+            console.error("Error consultando: " + err);
+            return;
+        }
+
+        res.send("Se borró el album!"); 
+    });
 };
 
 const getCancionesByAlbum = (req, res) => {
