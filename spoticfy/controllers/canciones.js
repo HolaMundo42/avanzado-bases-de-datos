@@ -25,6 +25,13 @@ const getCanciones = (_, res) => {
             ...
         ]
     */
+   const myInstruction = "SELECT * FROM canciones"; 
+   conn.query(myInstruction, (err, rows) => {
+    if (err) {
+        console.error("Error consultando: " + err);
+    }
+    res.send(rows);
+});  
 };
 
 const getCancion = (req, res) => {
@@ -41,6 +48,16 @@ const getCancion = (req, res) => {
             "reproducciones": "Reproducciones de la canción"
         }
     */
+        let id = req.params.id;
+        const myInstruction = "SELECT canciones.id, canciones.nombre, artistas.nombre AS nombre_artista, albumes.nombre AS nombre_album, canciones.duracion, canciones.reproducciones FROM albumes JOIN artistas JOIN canciones WHERE albumes.id = ?"; 
+        conn.query(myInstruction, [id], (err, rows) => {
+                if (err) {
+                    console.error("Error consultando: " + err);
+                    return;
+                }
+            
+                res.json(rows[0]);
+        });
 };
 
 const createCancion = (req, res) => {

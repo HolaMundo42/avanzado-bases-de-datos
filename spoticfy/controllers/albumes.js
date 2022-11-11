@@ -39,9 +39,9 @@ const getAlbum = (req, res) => {
             "nombre_artista": "Nombre del artista"
         }
     */
-
-    let id = req.params;
-    const myInstruction = "SELECT * FROM albumes WHERE albumes.id = ?";
+    
+    let id = req.params.id;
+    const myInstruction = "SELECT albumes.id, albumes.nombre, artistas.nombre AS nombre_artista FROM albumes JOIN artistas ON albumes.artista = artistas.id WHERE albumes.id = ?"; 
     conn.query(myInstruction, [id], (err, rows) => {
             if (err) {
                 console.error("Error consultando: " + err);
@@ -64,7 +64,7 @@ const createAlbum = (req, res) => {
     */
 
     let {nombre, artista} = req.body;
-    const myInstruction = "INSERT INTO albumes (nombre, artista) values (?, ?)";
+    const myInstruction = "INSERT INTO albumes (nombre, artista) VALUES (?, ?)";
     conn.query(myInstruction, [nombre, artista], err => {
         if (err) {
             console.error("Error consultando: " + err);
@@ -85,7 +85,7 @@ const updateAlbum = (req, res) => {
             "artista": "Id del artista"
         }
     */
-    let {id} = req.params;
+    let id = req.params.id;
     let {nombre, artista} = req.body;
     const myInstruction = "UPDATE albumes SET nombre = ?, artista = ? where id = ?";
 
@@ -103,7 +103,7 @@ const deleteAlbum = (req, res) => {
     // Completar con la consulta que elimina un album
     // Recordar que los parámetros de una consulta DELETE se encuentran en req.params
 
-    let id = req.params;
+    let id = req.params.id;
     const myInstruction = 'DELETE FROM albumes WHERE id = ?';
     conn.query(myInstruction, [id], err => { 
         if (err) {
@@ -119,6 +119,17 @@ const getCancionesByAlbum = (req, res) => {
     // Completar con la consulta que devuelve las canciones de un album
     // Recordar que los parámetros de una consulta GET se encuentran en req.params
     // Deberían devolver los datos de la misma forma que getCanciones
+
+    let id = req.params.id;
+    const myInstruction = 'SELECT * FROM canciones JOIN albumes ON albumes.id = ?';
+    conn.query(myInstruction, [id], (err, rows) => { 
+        if (err) {
+            console.error("Error consultando: " + err);
+            return;
+        }
+    
+        res.json(rows);
+    });
 };
 
 module.exports = {
