@@ -4,13 +4,9 @@ const clc = require("cli-color");
 const { Table } = require("console-table-printer");
 
 /* IMPORTANTE: Para correr los tests hace falta correr
-
     npm install axios cli-color console-table-printer
-
     y luego
-
     npm run test
-
 */
 
 const OK_MSG = clc.white.bgGreen(" OK ");

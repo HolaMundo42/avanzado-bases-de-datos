@@ -24,7 +24,7 @@ const getAlbumes = (_, res) => {
     if (err) {
         console.error("Error consultando: " + err);
     }
-    res.send(rows);
+    res.json(rows);
 });  
 };
 
@@ -71,7 +71,7 @@ const createAlbum = (req, res) => {
             return;
         }
 
-        res.send("Se creó el album!");
+        res.sendStatus(200);
     });
 };
 
@@ -95,7 +95,7 @@ const updateAlbum = (req, res) => {
             return;
         }
 
-        res.send("Se actualizó el album!");
+        res.sendStatus(200);
     });
 };
 
@@ -111,7 +111,7 @@ const deleteAlbum = (req, res) => {
             return;
         }
 
-        res.send("Se borró el album!"); 
+        res.sendStatus(200);
     });
 };
 

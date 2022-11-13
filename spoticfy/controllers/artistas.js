@@ -22,7 +22,7 @@ const getArtistas = (_, res) => {
     if (err) {
         console.error("Error consultando: " + err);
     }
-    res.send(rows);
+    res.json(rows);
     });
 };
 
@@ -66,7 +66,7 @@ const createArtista = (req, res) => {
             return;
         }
 
-        res.send("Se creó el album!");
+        res.sendStatus(200);
     });
 };
 
@@ -89,7 +89,7 @@ const updateArtista = (req, res) => {
             return;
         }
 
-        res.send("Se actualizó el album!");
+        res.sendStatus(200);
     });
 };
 
@@ -104,7 +104,7 @@ const deleteArtista = (req, res) => {
             return;
         }
 
-        res.send("Se borró el album!"); 
+        res.sendStatus(200);
     });
 };
 

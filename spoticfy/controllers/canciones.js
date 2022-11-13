@@ -25,13 +25,13 @@ const getCanciones = (_, res) => {
             ...
         ]
     */
-   const myInstruction = "SELECT * FROM canciones"; 
+   const myInstruction = "SELECT * FROM canciones";
    conn.query(myInstruction, (err, rows) => {
     if (err) {
-        console.error("Error consultando: " + err);
+        // console.error("Error consultando: " + err);
     }
-    res.send(rows);
-});  
+    res.json(rows);
+});
 };
 
 const getCancion = (req, res) => {
@@ -46,16 +46,16 @@ const getCancion = (req, res) => {
             "nombre_album": "Id del album",
             "duracion": "Duración de la canción",
             "reproducciones": "Reproducciones de la canción"
+
         }
     */
         let id = req.params.id;
-        const myInstruction = "SELECT canciones.id, canciones.nombre, artistas.nombre AS nombre_artista, albumes.nombre AS nombre_album, canciones.duracion, canciones.reproducciones FROM albumes JOIN artistas JOIN canciones WHERE albumes.id = ?"; 
+        const myInstruction = "SELECT canciones.id, canciones.nombre, artistas.nombre AS nombre_artista, albumes.nombre AS nombre_album, canciones.duracion, canciones.reproducciones FROM albumes JOIN artistas JOIN canciones WHERE albumes.id = ?";
         conn.query(myInstruction, [id], (err, rows) => {
                 if (err) {
                     console.error("Error consultando: " + err);
                     return;
                 }
-            
                 res.json(rows[0]);
         });
 };
@@ -72,6 +72,16 @@ const createCancion = (req, res) => {
         }
     */
     // (Reproducciones se inicializa en 0)
+    const {nombre, album, duracion} = req.body;
+    const query = "INSERT INTO canciones (nombre,album,duracion) VALUES (?,?,?)";
+
+    conn.query(query,[nombre, album, duracion],(err, rows) =>{
+        if (err) {
+            console.error("Error consultando: " + err);
+            return;
+        }
+        res.sendStatus(200);
+    });
 };
 
 const updateCancion = (req, res) => {
@@ -86,16 +96,48 @@ const updateCancion = (req, res) => {
         }
     */
     // (Reproducciones no se puede modificar con esta consulta)
+
+    const id = req.params.id;
+    const {nombre, album, duracion} = req.body;
+    const query = "UPDATE canciones SET nombre=?, album=?, duracion=? WHERE id=?";
+
+    conn.query(query,[nombre, album, duracion, id],(err, rows) =>{
+        if (err) {
+            console.error("Error consultando: " + err);
+            return;
+        }
+        res.sendStatus(200);
+    });
 };
 
 const deleteCancion = (req, res) => {
     // Completar con la consulta que elimina una canción
     // Recordar que los parámetros de una consulta DELETE se encuentran en req.params
+    const id = req.params.id;
+    const query = "DELETE FROM canciones WHERE id=?";
+
+    conn.query(query,[id],(err, rows) =>{
+        if (err) {
+            console.error("Error consultando: " + err);
+            return;
+        }
+        res.sendStatus(200);
+    });
 };
 
 const reproducirCancion = (req, res) => {
     // Completar con la consulta que aumenta las reproducciones de una canción
     // En este caso es una consulta PUT, pero no recibe ningún parámetro en el body, solo en los params
+    const id = req.params.id;
+    const query = "UPDATE canciones SET reproducciones= reproducciones + 1 WHERE id=?";
+
+    conn.query(query,[id],(err, rows) =>{
+        if (err) {
+            console.error("Error consultando: " + err);
+            return;
+        }
+        res.sendStatus(200);
+    });
 };
 
 module.exports = {
